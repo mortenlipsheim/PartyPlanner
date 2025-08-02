@@ -29,18 +29,18 @@ export default function NeighborsPage() {
 
   const handleAddNeighbor = async (newNeighbor: Omit<Neighbor, 'id'>) => {
     await createNeighbor(newNeighbor);
-    fetchAndSetNeighbors();
+    await fetchAndSetNeighbors();
   };
 
   const handleUpdateNeighbor = async (updatedNeighbor: Neighbor) => {
     await updateNeighbor(updatedNeighbor.id, updatedNeighbor);
     setEditingNeighbor(null);
-    fetchAndSetNeighbors();
+    await fetchAndSetNeighbors();
   };
 
   const handleDeleteNeighbor = async (id: string) => {
     await deleteNeighbor(id);
-    fetchAndSetNeighbors();
+    await fetchAndSetNeighbors();
   };
 
   return (
