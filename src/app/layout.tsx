@@ -6,7 +6,7 @@ import AppHeader from '@/components/app-header';
 
 export const metadata: Metadata = {
   title: 'Party Planner Pro',
-  description: 'Plan neighborhood parties with ease!',
+  description: 'Organisez facilement des fêtes de quartier !',
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

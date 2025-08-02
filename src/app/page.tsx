@@ -10,21 +10,21 @@ import { PartyCard } from '@/components/party-card';
 const initialParties: Party[] = [
   {
     id: '1',
-    name: 'Summer Block Party',
-    description: 'Let\'s celebrate summer with a neighborhood-wide block party! Grills will be running, music will be playing, and good times will be had.',
+    name: 'Fête de quartier d\'été',
+    description: 'Célébrons l\'été avec une fête de quartier ! Barbecues, musique et bonne humeur seront au rendez-vous.',
     date: new Date('2024-08-15T16:00:00'),
-    place: 'Community Park Pavilion',
-    menu: ['Hot Dogs', 'Hamburgers', 'Corn on the Cob', 'Watermelon', 'Potato Salad', 'Brownies'],
-    comments: 'Bring your favorite lawn chairs and games!',
+    place: 'Pavillon du parc communautaire',
+    menu: ['Hot-dogs', 'Hamburgers', 'Maïs grillé', 'Pastèque', 'Salade de pommes de terre', 'Brownies'],
+    comments: 'Apportez vos chaises de jardin et vos jeux préférés !',
   },
   {
     id: '2',
-    name: 'Halloween Spooktacular',
-    description: 'A spooky and fun get-together for all ages. Costume contest for kids and adults!',
+    name: 'Spécial Halloween',
+    description: 'Une rencontre effrayante et amusante pour tous les âges. Concours de costumes pour enfants et adultes !',
     date: new Date('2024-10-31T18:00:00'),
-    place: 'The Miller\'s Driveway (123 Oak St)',
-    menu: ['Chili', 'Corndogs', 'Pumpkin Cookies', 'Apple Cider'],
-    comments: 'Best costume wins a prize!',
+    place: 'L\'allée des Miller (123 Rue du Chêne)',
+    menu: ['Chili', 'Saucisses de maïs', 'Biscuits à la citrouille', 'Cidre de pomme'],
+    comments: 'Le meilleur costume remporte un prix !',
   },
 ];
 
@@ -48,11 +48,11 @@ export default function Home() {
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-4xl font-headline text-gray-800 dark:text-gray-200">Upcoming Parties</h1>
+        <h1 className="text-4xl font-headline text-gray-800 dark:text-gray-200">Prochaines Fêtes</h1>
         <CreatePartyDialog onPartyCreate={handleAddParty} open={isCreateDialogOpen} onOpenChange={setCreateDialogOpen}>
           <Button>
             <PlusCircle className="mr-2 h-4 w-4" />
-            Create Party
+            Créer une Fête
           </Button>
         </CreatePartyDialog>
       </div>
@@ -65,8 +65,8 @@ export default function Home() {
         </div>
       ) : (
         <div className="text-center py-16 border-2 border-dashed rounded-lg">
-          <h2 className="text-2xl font-semibold text-gray-600 dark:text-gray-400">No Parties Planned</h2>
-          <p className="mt-2 text-muted-foreground">Why not create one and get the fun started?</p>
+          <h2 className="text-2xl font-semibold text-gray-600 dark:text-gray-400">Aucune Fête de Prévue</h2>
+          <p className="mt-2 text-muted-foreground">Pourquoi ne pas en créer une pour commencer à vous amuser ?</p>
         </div>
       )}
     </div>

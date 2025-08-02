@@ -9,8 +9,8 @@ export default function AppHeader() {
   const pathname = usePathname();
 
   const navLinks = [
-    { href: '/', label: 'Parties' },
-    { href: '/neighbors', label: 'Neighbors' },
+    { href: '/', label: 'Fêtes' },
+    { href: '/neighbors', label: 'Voisins' },
   ];
 
   return (

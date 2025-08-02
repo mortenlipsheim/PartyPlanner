@@ -27,8 +27,8 @@ interface NeighborTableProps {
 export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
   const handleSendEmail = (name: string) => {
     toast({
-      title: 'Email Sent!',
-      description: `An update request email has been sent to ${name}.`,
+      title: 'Email envoyé !',
+      description: `Un e-mail de demande de mise à jour a été envoyé à ${name}.`,
     });
   };
 
@@ -37,10 +37,10 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Address</TableHead>
+            <TableHead>Nom</TableHead>
+            <TableHead>Adresse</TableHead>
             <TableHead className="hidden sm:table-cell">Email</TableHead>
-            <TableHead className="hidden md:table-cell">Phone</TableHead>
+            <TableHead className="hidden md:table-cell">Téléphone</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
             </TableHead>
@@ -58,21 +58,21 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
+                        <span className="sr-only">Ouvrir le menu</span>
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => handleSendEmail(neighbor.name)}>
                         <Mail className="mr-2 h-4 w-4" />
-                        Send Update Email
+                        Envoyer un e-mail de mise à jour
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => onDelete(neighbor.id)}
                         className="text-destructive focus:text-destructive focus:bg-destructive/10"
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
+                        Supprimer
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -82,7 +82,7 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
           ) : (
             <TableRow>
               <TableCell colSpan={5} className="h-24 text-center">
-                No neighbors found. Add one to get started!
+                Aucun voisin trouvé. Ajoutez-en un pour commencer !
               </TableCell>
             </TableRow>
           )}

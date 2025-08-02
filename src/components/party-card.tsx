@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import { Calendar, MapPin, MenuSquare, Trash2, Send } from 'lucide-react';
 
 interface PartyCardProps {
@@ -15,8 +16,8 @@ interface PartyCardProps {
 export function PartyCard({ party, onDelete }: PartyCardProps) {
   const handleInvite = () => {
     toast({
-      title: 'Invitations Sent!',
-      description: `Invitations for "${party.name}" have been sent out.`,
+      title: 'Invitations envoyées !',
+      description: `Les invitations pour "${party.name}" ont été envoyées.`,
     });
   };
 
@@ -26,7 +27,7 @@ export function PartyCard({ party, onDelete }: PartyCardProps) {
         <CardTitle className="font-headline text-2xl">{party.name}</CardTitle>
         <CardDescription className="flex items-center gap-2 pt-1">
           <Calendar className="h-4 w-4" />
-          <span>{format(party.date, 'PPPP p')}</span>
+          <span>{format(party.date, 'PPPP p', { locale: fr })}</span>
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-grow space-y-4">
@@ -46,7 +47,7 @@ export function PartyCard({ party, onDelete }: PartyCardProps) {
               ))}
               {party.menu.length > 4 && (
                  <span className="bg-accent text-accent-foreground text-xs font-medium px-2 py-1 rounded-full">
-                  +{party.menu.length - 4} more
+                  +{party.menu.length - 4} de plus
                 </span>
               )}
             </div>
@@ -56,11 +57,11 @@ export function PartyCard({ party, onDelete }: PartyCardProps) {
       <CardFooter className="flex justify-between gap-2">
         <Button variant="outline" onClick={() => onDelete(party.id)} className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/50">
           <Trash2 className="mr-2 h-4 w-4" />
-          Delete
+          Supprimer
         </Button>
         <Button onClick={handleInvite}>
           <Send className="mr-2 h-4 w-4" />
-          Invite Guests
+          Inviter
         </Button>
       </CardFooter>
     </Card>

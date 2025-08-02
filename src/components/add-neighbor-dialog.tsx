@@ -25,10 +25,10 @@ import { Input } from '@/components/ui/input';
 import { Neighbor } from '@/lib/types';
 
 const neighborSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
-  address: z.string().min(5, { message: 'Please enter a valid address.' }),
-  email: z.string().email({ message: 'Please enter a valid email.' }),
-  phone: z.string().min(10, { message: 'Please enter a valid phone number.' }),
+  name: z.string().min(2, { message: 'Le nom doit contenir au moins 2 caractères.' }),
+  address: z.string().min(5, { message: 'Veuillez saisir une adresse valide.' }),
+  email: z.string().email({ message: 'Veuillez saisir une adresse e-mail valide.' }),
+  phone: z.string().regex(/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/, { message: 'Veuillez saisir un numéro de téléphone valide.' }),
 });
 
 type AddNeighborFormValues = z.infer<typeof neighborSchema>;
@@ -62,9 +62,9 @@ export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCrea
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="font-headline">Add a Neighbor</DialogTitle>
+          <DialogTitle className="font-headline">Ajouter un voisin</DialogTitle>
           <DialogDescription>
-            Enter the details of your neighbor to add them to the registry.
+            Saisissez les informations de votre voisin pour l'ajouter au registre.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -74,9 +74,9 @@ export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCrea
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name(s)</FormLabel>
+                  <FormLabel>Nom(s)</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., The Smiths or Jane Doe" {...field} />
+                    <Input placeholder="ex: Les Martin ou Jeanne Dupont" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -87,9 +87,9 @@ export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCrea
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>Adresse</FormLabel>
                   <FormControl>
-                    <Input placeholder="123 Main St" {...field} />
+                    <Input placeholder="123 Rue de la Paix" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -102,7 +102,7 @@ export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCrea
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="neighbor@example.com" {...field} />
+                    <Input placeholder="voisin@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -113,16 +113,16 @@ export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCrea
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone</FormLabel>
+                  <FormLabel>Téléphone</FormLabel>
                   <FormControl>
-                    <Input placeholder="555-123-4567" {...field} />
+                    <Input placeholder="06 12 34 56 78" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter>
-              <Button type="submit">Add Neighbor</Button>
+              <Button type="submit">Ajouter un voisin</Button>
             </DialogFooter>
           </form>
         </Form>

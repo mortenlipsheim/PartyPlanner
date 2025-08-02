@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -33,11 +34,11 @@ import { CalendarIcon, PlusCircle, Trash2 } from 'lucide-react';
 import { Party } from '@/lib/types';
 
 const partySchema = z.object({
-  name: z.string().min(3, { message: 'Party name must be at least 3 characters.' }),
-  description: z.string().min(10, { message: 'Description must be at least 10 characters.' }),
-  date: z.date({ required_error: 'A date is required.' }),
-  place: z.string().min(3, { message: 'A location is required.' }),
-  menu: z.array(z.object({ value: z.string().min(1, { message: 'Menu item cannot be empty.' }) })),
+  name: z.string().min(3, { message: 'Le nom de la fête doit comporter au moins 3 caractères.' }),
+  description: z.string().min(10, { message: 'La description doit comporter au moins 10 caractères.' }),
+  date: z.date({ required_error: 'Une date est requise.' }),
+  place: z.string().min(3, { message: 'Un lieu est requis.' }),
+  menu: z.array(z.object({ value: z.string().min(1, { message: 'Le plat ne peut pas être vide.' }) })),
   comments: z.string().optional(),
 });
 
@@ -78,8 +79,8 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="font-headline">Create a New Party</DialogTitle>
-          <DialogDescription>Fill in the details below to plan your next get-together.</DialogDescription>
+          <DialogTitle className="font-headline">Créer une nouvelle fête</DialogTitle>
+          <DialogDescription>Remplissez les détails ci-dessous pour planifier votre prochaine rencontre.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
@@ -89,8 +90,8 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Party Name</FormLabel>
-                    <FormControl><Input placeholder="e.g., Summer BBQ" {...field} /></FormControl>
+                    <FormLabel>Nom de la fête</FormLabel>
+                    <FormControl><Input placeholder="ex: Barbecue d'été" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -100,7 +101,7 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
                 name="date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Date & Time</FormLabel>
+                    <FormLabel>Date et heure</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -108,13 +109,13 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
                             variant={'outline'}
                             className={cn('w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
                           >
-                            {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                            {field.value ? format(field.value, 'PPP', { locale: fr }) : <span>Choisir une date</span>}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                        <Calendar locale={fr} mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
                       </PopoverContent>
                     </Popover>
                     <FormMessage />
@@ -126,8 +127,8 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
               control={form.control}
               name="place"
               render={({ field }) => (
-                <FormItem><FormLabel>Location</FormLabel>
-                  <FormControl><Input placeholder="e.g., Community Park" {...field} /></FormControl>
+                <FormItem><FormLabel>Lieu</FormLabel>
+                  <FormControl><Input placeholder="ex: Parc communautaire" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -137,15 +138,15 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
               name="description"
               render={({ field }) => (
                 <FormItem><FormLabel>Description</FormLabel>
-                  <FormControl><Textarea placeholder="Describe the party..." {...field} /></FormControl>
+                  <FormControl><Textarea placeholder="Décrivez la fête..." {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             
             <FormItem>
-                <FormLabel>Menu Items</FormLabel>
-                <FormDescription>List the food items you plan to have.</FormDescription>
+                <FormLabel>Plats du menu</FormLabel>
+                <FormDescription>Listez les plats que vous prévoyez de servir.</FormDescription>
                 <div className="space-y-2">
                     {fields.map((field, index) => (
                         <div key={field.id} className="flex items-center gap-2">
@@ -154,7 +155,7 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
                                 name={`menu.${index}.value`}
                                 render={({ field }) => (
                                     <FormItem className="flex-grow">
-                                    <FormControl><Input {...field} placeholder={`Menu item #${index + 1}`} /></FormControl>
+                                    <FormControl><Input {...field} placeholder={`Plat #${index + 1}`} /></FormControl>
                                     <FormMessage/>
                                     </FormItem>
                                 )}
@@ -166,7 +167,7 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
                     ))}
                 </div>
                 <Button type="button" variant="outline" size="sm" onClick={() => append({ value: '' })} >
-                    <PlusCircle className="mr-2 h-4 w-4" /> Add Menu Item
+                    <PlusCircle className="mr-2 h-4 w-4" /> Ajouter un plat
                 </Button>
             </FormItem>
 
@@ -175,15 +176,15 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
               name="comments"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Additional Comments</FormLabel>
-                  <FormControl><Textarea placeholder="e.g., Bring your own chairs." {...field} /></FormControl>
+                  <FormLabel>Commentaires supplémentaires</FormLabel>
+                  <FormControl><Textarea placeholder="ex: Apportez vos propres chaises." {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
             <DialogFooter>
-              <Button type="submit">Create Party</Button>
+              <Button type="submit">Créer la Fête</Button>
             </DialogFooter>
           </form>
         </Form>
