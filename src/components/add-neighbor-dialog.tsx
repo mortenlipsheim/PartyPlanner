@@ -22,13 +22,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Neighbor } from '@/lib/types';
 
 const neighborSchema = z.object({
-  name: z.string().min(2, { message: 'Le nom doit contenir au moins 2 caractères.' }),
   address: z.string().min(5, { message: 'Veuillez saisir une adresse valide.' }),
-  email: z.string().email({ message: 'Veuillez saisir une adresse e-mail valide.' }),
-  phone: z.string().regex(/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/, { message: 'Veuillez saisir un numéro de téléphone valide.' }),
+  name: z.string().min(2, { message: 'Le nom doit contenir au moins 2 caractères.' }),
 });
 
 type AddNeighborFormValues = z.infer<typeof neighborSchema>;
@@ -37,17 +36,15 @@ interface AddNeighborDialogProps {
   children: React.ReactNode;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onNeighborCreate: (neighbor: Omit<Neighbor, 'id'>) => void;
+  onNeighborCreate: (neighbor: Omit<Neighbor, 'id' | 'email' | 'phone'>) => void;
 }
 
 export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCreate }: AddNeighborDialogProps) {
   const form = useForm<AddNeighborFormValues>({
     resolver: zodResolver(neighborSchema),
     defaultValues: {
-      name: '',
       address: '',
-      email: '',
-      phone: '',
+      name: '',
     },
   });
 
@@ -64,24 +61,11 @@ export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCrea
         <DialogHeader>
           <DialogTitle className="font-headline">Ajouter un voisin</DialogTitle>
           <DialogDescription>
-            Saisissez les informations de votre voisin pour l'ajouter au registre.
+            Saisissez l'adresse et le nom de votre voisin pour l'ajouter au registre.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nom(s)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="ex: Les Martin ou Jeanne Dupont" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="address"
@@ -97,25 +81,12 @@ export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCrea
             />
             <FormField
               control={form.control}
-              name="email"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Nom(s)</FormLabel>
                   <FormControl>
-                    <Input placeholder="voisin@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Téléphone</FormLabel>
-                  <FormControl>
-                    <Input placeholder="06 12 34 56 78" {...field} />
+                    <Textarea placeholder="ex: Les Martin, Jeanne Dupont..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

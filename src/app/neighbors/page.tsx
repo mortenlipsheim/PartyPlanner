@@ -18,8 +18,8 @@ export default function NeighborsPage() {
   const [neighbors, setNeighbors] = useState<Neighbor[]>(initialNeighbors);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
 
-  const handleAddNeighbor = (newNeighbor: Omit<Neighbor, 'id'>) => {
-    setNeighbors((prev) => [...prev, { ...newNeighbor, id: (prev.length + 1).toString() }]);
+  const handleAddNeighbor = (newNeighbor: Omit<Neighbor, 'id' | 'email' | 'phone'>) => {
+    setNeighbors((prev) => [...prev, { ...newNeighbor, id: (prev.length + 1).toString(), email: '', phone: '' }]);
   };
 
   const handleDeleteNeighbor = (id: string) => {

@@ -27,8 +27,9 @@ interface NeighborTableProps {
 export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
   const handleSendEmail = (name: string) => {
     toast({
-      title: 'Email envoyé !',
-      description: `Un e-mail de demande de mise à jour a été envoyé à ${name}.`,
+      title: 'Action non disponible',
+      description: `La fonctionnalité d'envoi d'e-mail a été désactivée.`,
+      variant: 'destructive',
     });
   };
 
@@ -37,10 +38,8 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Nom</TableHead>
             <TableHead>Adresse</TableHead>
-            <TableHead className="hidden sm:table-cell">Email</TableHead>
-            <TableHead className="hidden md:table-cell">Téléphone</TableHead>
+            <TableHead>Nom(s)</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
             </TableHead>
@@ -50,10 +49,8 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
           {neighbors.length > 0 ? (
             neighbors.map((neighbor) => (
               <TableRow key={neighbor.id}>
-                <TableCell className="font-medium">{neighbor.name}</TableCell>
-                <TableCell>{neighbor.address}</TableCell>
-                <TableCell className="hidden sm:table-cell">{neighbor.email}</TableCell>
-                <TableCell className="hidden md:table-cell">{neighbor.phone}</TableCell>
+                <TableCell className="font-medium">{neighbor.address}</TableCell>
+                <TableCell style={{ whiteSpace: 'pre-wrap' }}>{neighbor.name}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -81,7 +78,7 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={5} className="h-24 text-center">
+              <TableCell colSpan={3} className="h-24 text-center">
                 Aucun voisin trouvé. Ajoutez-en un pour commencer !
               </TableCell>
             </TableRow>
