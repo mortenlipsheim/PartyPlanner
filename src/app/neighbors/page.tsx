@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { NeighborTable } from '@/components/neighbor-table';
 import { AddNeighborDialog } from '@/components/add-neighbor-dialog';
+import { EditNeighborDialog } from '@/components/edit-neighbor-dialog';
 
 const initialNeighbors: Neighbor[] = [
   { id: '1', name: 'Les Martins', address: '123 Rue de la Paix', email: 'martin@example.com', phone: '0612345678' },
@@ -17,9 +18,15 @@ const initialNeighbors: Neighbor[] = [
 export default function NeighborsPage() {
   const [neighbors, setNeighbors] = useState<Neighbor[]>(initialNeighbors);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
+  const [editingNeighbor, setEditingNeighbor] = useState<Neighbor | null>(null);
 
   const handleAddNeighbor = (newNeighbor: Omit<Neighbor, 'id'>) => {
     setNeighbors((prev) => [...prev, { ...newNeighbor, id: (prev.length + 1).toString() }]);
+  };
+
+  const handleUpdateNeighbor = (updatedNeighbor: Neighbor) => {
+    setNeighbors((prev) => prev.map((n) => (n.id === updatedNeighbor.id ? updatedNeighbor : n)));
+    setEditingNeighbor(null);
   };
 
   const handleDeleteNeighbor = (id: string) => {
@@ -37,7 +44,15 @@ export default function NeighborsPage() {
             </Button>
         </AddNeighborDialog>
       </div>
-      <NeighborTable neighbors={neighbors} onDelete={handleDeleteNeighbor} />
+      <NeighborTable neighbors={neighbors} onEdit={setEditingNeighbor} onDelete={handleDeleteNeighbor} />
+      {editingNeighbor && (
+        <EditNeighborDialog
+          neighbor={editingNeighbor}
+          onNeighborUpdate={handleUpdateNeighbor}
+          open={!!editingNeighbor}
+          onOpenChange={(open) => !open && setEditingNeighbor(null)}
+        />
+      )}
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Calendar, MapPin, MenuSquare, Trash2, Send, Users, UserCheck } from 'lucide-react';
+import { Calendar, MapPin, MenuSquare, Trash2, Send, Users, UserCheck, Pencil } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
@@ -15,11 +15,12 @@ import { Separator } from './ui/separator';
 interface PartyCardProps {
   party: Party;
   neighbors: Neighbor[];
+  onEdit: () => void;
   onDelete: (id: string) => void;
   onAttendeeChange: (partyId: string, neighborId: string, isAttending: boolean) => void;
 }
 
-export function PartyCard({ party, neighbors, onDelete, onAttendeeChange }: PartyCardProps) {
+export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange }: PartyCardProps) {
   const handleInvite = () => {
     const attendees = neighbors.filter(n => party.attendees.includes(n.id));
     const attendeeEmails = attendees.map(a => a.email).filter(Boolean);
@@ -122,10 +123,14 @@ Merci !`;
         </Accordion>
       </CardContent>
       <CardFooter className="flex justify-between gap-2 border-t pt-6">
-        <Button variant="outline" onClick={() => onDelete(party.id)} className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/50">
-          <Trash2 className="mr-2 h-4 w-4" />
-          Supprimer
-        </Button>
+        <div className='flex gap-2'>
+          <Button variant="outline" onClick={onEdit}>
+              <Pencil className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" onClick={() => onDelete(party.id)} className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/50">
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
         <Button onClick={handleInvite}>
           <Send className="mr-2 h-4 w-4" />
           Inviter

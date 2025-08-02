@@ -14,17 +14,19 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Mail, Trash2, Phone } from 'lucide-react';
+import { MoreHorizontal, Mail, Trash2, Phone, Pencil } from 'lucide-react';
 import { Neighbor } from '@/lib/types';
 
 interface NeighborTableProps {
   neighbors: Neighbor[];
+  onEdit: (neighbor: Neighbor) => void;
   onDelete: (id: string) => void;
 }
 
-export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
+export function NeighborTable({ neighbors, onEdit, onDelete }: NeighborTableProps) {
   const handleSendEmail = (neighbor: Neighbor) => {
     if (neighbor.email) {
       window.location.href = `mailto:${neighbor.email}`;
@@ -81,6 +83,10 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                       <DropdownMenuItem onClick={() => onEdit(neighbor)}>
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Modifier
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleSendEmail(neighbor)}>
                         <Mail className="mr-2 h-4 w-4" />
                         Envoyer un e-mail
@@ -89,6 +95,7 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
                         <Phone className="mr-2 h-4 w-4" />
                         Appeler
                       </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={() => onDelete(neighbor.id)}
                         className="text-destructive focus:text-destructive focus:bg-destructive/10"

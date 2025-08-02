@@ -5,6 +5,7 @@ import { Party, Neighbor } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { CreatePartyDialog } from '@/components/create-party-dialog';
+import { EditPartyDialog } from '@/components/edit-party-dialog';
 import { PartyCard } from '@/components/party-card';
 
 const initialParties: Party[] = [
@@ -42,6 +43,7 @@ export default function Home() {
   const [parties, setParties] = useState<Party[]>(initialParties);
   const [neighbors, setNeighbors] = useState<Neighbor[]>(initialNeighbors);
   const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
+  const [editingParty, setEditingParty] = useState<Party | null>(null);
 
   const handleAddParty = (newParty: Omit<Party, 'id' | 'attendees'>) => {
     setParties((prevParties) => [
@@ -50,6 +52,11 @@ export default function Home() {
     ]);
   };
   
+  const handleUpdateParty = (updatedParty: Party) => {
+    setParties(parties.map(p => p.id === updatedParty.id ? updatedParty : p));
+    setEditingParty(null);
+  };
+
   const handleDeleteParty = (partyId: string) => {
     setParties(parties.filter(p => p.id !== partyId));
   };
@@ -86,6 +93,7 @@ export default function Home() {
               key={party.id} 
               party={party} 
               neighbors={neighbors}
+              onEdit={() => setEditingParty(party)}
               onDelete={handleDeleteParty}
               onAttendeeChange={handleAttendeeChange}
             />
@@ -96,6 +104,14 @@ export default function Home() {
           <h2 className="text-2xl font-semibold text-gray-600 dark:text-gray-400">Aucune Fête de Prévue</h2>
           <p className="mt-2 text-muted-foreground">Pourquoi ne pas en créer une pour commencer à vous amuser ?</p>
         </div>
+      )}
+      {editingParty && (
+        <EditPartyDialog
+          party={editingParty}
+          onPartyUpdate={handleUpdateParty}
+          open={!!editingParty}
+          onOpenChange={(open) => !open && setEditingParty(null)}
+        />
       )}
     </div>
   );
