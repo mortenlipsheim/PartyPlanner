@@ -30,5 +30,45 @@
         "status": "invited"
       }
     ]
+  },
+  {
+    "id": "510ddca4-57eb-4f16-bba8-b6d064f37ffc",
+    "name": "Test 2",
+    "description": "Testpart again",
+    "date": "2025-08-09T16:00:00.000Z",
+    "place": "somewhere",
+    "menu": [
+      {
+        "name": "Burgers",
+        "broughtBy": null
+      },
+      {
+        "name": "Hot Dogs",
+        "broughtBy": null
+      },
+      {
+        "name": "Spaghetti",
+        "broughtBy": "68c05dc7-c998-4f2f-bac4-7fca6961d272"
+      },
+      {
+        "name": "Macaroni",
+        "broughtBy": null
+      },
+      {
+        "name": "Salad",
+        "broughtBy": null
+      }
+    ],
+    "comments": "Come as you are",
+    "attendees": [
+      {
+        "neighborId": "68c05dc7-c998-4f2f-bac4-7fca6961d272",
+        "status": "invited"
+      },
+      {
+        "neighborId": "f874b46a-b256-44b1-9bf8-d802eb90cbf1",
+        "status": "invited"
+      }
+    ]
   }
 ]

@@ -230,7 +230,7 @@ export function EditPartyDialog({ party, neighbors, open, onOpenChange, onPartyU
                                           </FormControl>
                                           <SelectContent>
                                             <SelectItem value="personne">Personne</SelectItem>
-                                            {attendingNeighbors.map(n => <SelectItem key={n.id} value={n.id}>{n.name.split(',')[0]}</SelectItem>)}
+                                            {attendingNeighbors.map(n => <SelectItem key={n.id} value={n.id}>{n.name.split('\n')[0].split(',')[0]}</SelectItem>)}
                                           </SelectContent>
                                       </Select>
                                     </FormItem>

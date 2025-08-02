@@ -107,6 +107,12 @@ export const assignMenuItem = async (partyId: string, menuItemName: string, neig
         throw new Error('Party not found');
     }
 
+    // Ensure the neighbor is actually attending
+    const attendee = party.attendees.find(a => a.neighborId === neighborId && a.status === 'attending');
+    if (!attendee) {
+        throw new Error('Neighbor is not confirmed as attending this party.');
+    }
+
     const menuItem = party.menu.find(item => item.name === menuItemName);
     if (!menuItem) {
         throw new Error('Menu item not found');
