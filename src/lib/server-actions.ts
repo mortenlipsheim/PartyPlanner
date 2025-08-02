@@ -8,37 +8,50 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface SendInvitationEmailProps {
     party: Party;
-    attendees: Neighbor[];
+    neighbors: Neighbor[];
 }
 
-export async function sendInvitationEmail({ party, attendees }: SendInvitationEmailProps): Promise<{ success: boolean; error?: string }> {
+export async function sendInvitationEmail({ party, neighbors }: SendInvitationEmailProps): Promise<{ success: boolean; error?: string }> {
     if (!process.env.RESEND_API_KEY) {
         console.error('Resend API key is not configured.');
         return { success: false, error: "La configuration du service d'email est incomplète sur le serveur." };
     }
     
-    const emails = attendees
-        .map(n => n.email)
-        .filter((email): email is string => typeof email === 'string' && email.length > 0);
+    const emailsAndNeighbors = neighbors
+        .map(n => ({ email: n.email, neighborId: n.id }))
+        .filter((item): item is { email: string; neighborId: string } => typeof item.email === 'string' && item.email.length > 0);
 
-    if (emails.length === 0) {
+    if (emailsAndNeighbors.length === 0) {
         return { success: false, error: "Aucune adresse e-mail valide à qui envoyer l'invitation." };
     }
 
     try {
-        const { data, error } = await resend.emails.send({
-            from: 'Party Planner <onboarding@resend.dev>', // Vous devrez configurer un domaine vérifié sur Resend
-            to: emails,
-            subject: `Invitation : ${party.name}`,
-            react: InvitationEmail({ party }),
+        const emailPromises = emailsAndNeighbors.map(({ email, neighborId }) => {
+            return resend.emails.send({
+                from: 'Party Planner <onboarding@resend.dev>',
+                to: [email],
+                subject: `Invitation : ${party.name}`,
+                react: InvitationEmail({ 
+                    party, 
+                    neighborId 
+                }),
+            });
         });
+        
+        const results = await Promise.allSettled(emailPromises);
 
-        if (error) {
-            console.error('Error sending email with Resend:', error);
-            return { success: false, error: "Le service d'envoi d'e-mails a rencontré une erreur." };
+        const failed = results.filter(r => r.status === 'rejected');
+        if (failed.length > 0) {
+             console.error('Some emails failed to send with Resend:', failed);
+             // We can still return success if at least one email was sent
+        }
+
+        if (results.every(r => r.status === 'rejected')) {
+             return { success: false, error: "Le service d'envoi d'e-mails a rencontré une erreur pour toutes les adresses." };
         }
 
         return { success: true };
+
     } catch (e) {
         console.error('Exception while sending email:', e);
         return { success: false, error: "Une erreur inattendue est survenue lors de l'envoi des invitations." };

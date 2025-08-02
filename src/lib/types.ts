@@ -1,9 +1,21 @@
+export type RSVPStatus = 'invited' | 'attending' | 'declined';
+
+export interface Attendee {
+  neighborId: string;
+  status: RSVPStatus;
+}
+
+export interface MenuItem {
+  name: string;
+  broughtBy: string | null; // neighborId
+}
+
 export type Neighbor = {
   id: string;
   name: string;
   address: string;
-  email: string;
-  phone: string;
+  email: string | undefined;
+  phone: string | undefined;
 };
 
 export type Party = {
@@ -12,7 +24,7 @@ export type Party = {
   description: string;
   date: Date;
   place: string;
-  menu: string[];
-  comments: string;
-  attendees: string[]; // Array of neighbor IDs
+  menu: MenuItem[];
+  comments?: string;
+  attendees: Attendee[];
 };
