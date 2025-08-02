@@ -50,7 +50,7 @@ const InvitationEmail = ({ party, neighborId }: InvitationEmailProps) => {
           </div>
 
           <div style={sectionStyle}>
-            <p style={textStyle}><strong style={strongStyle}>Quand ?</strong> {format(party.date, 'PPPP p', { locale: fr })}</p>
+            <p style={textStyle}><strong style={strongStyle}>Quand ?</strong> {format(new Date(party.date), 'PPPP p', { locale: fr })}</p>
             <p style={textStyle}><strong style={strongStyle}>Où ?</strong> {party.place}</p>
           </div>
 

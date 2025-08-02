@@ -22,7 +22,8 @@ export default function Home() {
     setLoading(true);
     try {
       const [partiesData, neighborsData] = await Promise.all([getParties(), getNeighbors()]);
-      setParties(partiesData.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+      const sortedParties = partiesData.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      setParties(sortedParties);
       setNeighbors(neighborsData);
     } catch (error) {
       console.error("Failed to fetch data:", error);

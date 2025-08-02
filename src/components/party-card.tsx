@@ -97,7 +97,7 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
         <CardTitle className="font-headline text-2xl">{party.name}</CardTitle>
         <CardDescription className="flex items-center gap-2 pt-1">
           <Calendar className="h-4 w-4" />
-          <span>{format(party.date, 'PPPP p', { locale: fr })}</span>
+          <span>{format(new Date(party.date), 'PPPP p', { locale: fr })}</span>
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-grow space-y-4">
@@ -168,21 +168,21 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
                         <UserCheck className="h-4 w-4"/> Participants ({attending.length})
                     </div>
                     <ul className="list-disc pl-6 text-sm text-muted-foreground mt-1">
-                        {attending.map(a => <li key={a.neighborId}>{getNeighborName(a.neighborId)}</li>)}
+                        {attending.length > 0 ? attending.map(a => <li key={a.neighborId}>{getNeighborName(a.neighborId)}</li>) : <li>Aucun pour le moment.</li>}
                     </ul>
 
                     <div className="flex items-center gap-2 text-sm text-red-600 font-medium mt-3">
                         <UserX className="h-4 w-4"/> Absents ({declined.length})
                     </div>
                      <ul className="list-disc pl-6 text-sm text-muted-foreground mt-1">
-                        {declined.map(a => <li key={a.neighborId}>{getNeighborName(a.neighborId)}</li>)}
+                        {declined.length > 0 ? declined.map(a => <li key={a.neighborId}>{getNeighborName(a.neighborId)}</li>) : <li>Aucun pour le moment.</li>}
                     </ul>
 
                     <div className="flex items-center gap-2 text-sm text-blue-600 font-medium mt-3">
                         <MailQuestion className="h-4 w-4"/> En attente ({invited.length})
                     </div>
                      <ul className="list-disc pl-6 text-sm text-muted-foreground mt-1">
-                        {invited.map(a => <li key={a.neighborId}>{getNeighborName(a.neighborId)}</li>)}
+                        {invited.length > 0 ? invited.map(a => <li key={a.neighborId}>{getNeighborName(a.neighborId)}</li>) : <li>Aucun pour le moment.</li>}
                     </ul>
                 </AccordionContent>
             </AccordionItem>
@@ -212,5 +212,3 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
     </Card>
   );
 }
-
-    

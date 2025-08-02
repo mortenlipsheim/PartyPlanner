@@ -65,14 +65,16 @@ export function EditPartyDialog({ party, neighbors, open, onOpenChange, onPartyU
     control: form.control,
     name: 'menu',
   });
+
+  const attendingNeighbors = neighbors.filter(n => party.attendees.some(a => a.neighborId === n.id && a.status === 'attending'));
   
   useEffect(() => {
     if (party) {
       form.reset({
         name: party.name,
         description: party.description,
-        date: party.date,
-        time: formatDate(party.date, 'HH:mm'),
+        date: new Date(party.date),
+        time: formatDate(new Date(party.date), 'HH:mm'),
         place: party.place,
         menu: party.menu.map(item => ({ name: item.name, broughtBy: item.broughtBy })),
         comments: party.comments,
@@ -206,7 +208,7 @@ export function EditPartyDialog({ party, neighbors, open, onOpenChange, onPartyU
                                           </FormControl>
                                           <SelectContent>
                                             <SelectItem value="personne">Personne</SelectItem>
-                                            {neighbors.map(n => <SelectItem key={n.id} value={n.id}>{n.name.split(',')[0]}</SelectItem>)}
+                                            {attendingNeighbors.map(n => <SelectItem key={n.id} value={n.id}>{n.name.split(',')[0]}</SelectItem>)}
                                           </SelectContent>
                                       </Select>
                                     </FormItem>
