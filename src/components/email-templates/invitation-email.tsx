@@ -21,47 +21,93 @@ const InvitationEmail = ({ party, neighborId }: InvitationEmailProps) => {
     margin: '32px auto',
     padding: '32px',
     maxWidth: '600px',
+    fontFamily: '"PT Sans", sans-serif',
+    color: '#374151',
     boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
   };
-  const bodyStyle: React.CSSProperties = { backgroundColor: '#f3f4f6', fontFamily: '"PT Sans", sans-serif' };
-  const headingStyle: React.CSSProperties = { fontSize: '24px', fontWeight: 'bold', color: '#1f2937', textAlign: 'center', fontFamily: '"Playfair Display", serif' };
-  const textCenterStyle: React.CSSProperties = { fontSize: '18px', color: '#4b5563', textAlign: 'center' };
-  const partyNameStyle: React.CSSProperties = { fontSize: '36px', fontWeight: 'bold', color: 'hsl(16 100% 66%)', textAlign: 'center', marginBottom: '-8px', fontFamily: '"Playfair Display", serif' };
-  const sectionStyle: React.CSSProperties = { marginTop: '32px' };
-  const textStyle: React.CSSProperties = { fontSize: '16px', lineHeight: '1.5', color: '#374151' };
-  const strongStyle: React.CSSProperties = { color: '#1f2937', fontWeight: 'bold' };
-  const buttonContainerStyle: React.CSSProperties = { marginTop: '32px', textAlign: 'center' };
+  const bodyStyle: React.CSSProperties = { 
+    backgroundColor: '#F2D7D9', // Light Peach Background
+    margin: '0', 
+    padding: '0' 
+  };
+  const headingStyle: React.CSSProperties = { 
+    fontSize: '28px', 
+    fontWeight: 'bold', 
+    color: '#1f2937', 
+    textAlign: 'center', 
+    fontFamily: '"Playfair Display", serif' 
+  };
+  const textCenterStyle: React.CSSProperties = { 
+    fontSize: '18px', 
+    color: '#4b5563', 
+    textAlign: 'center' 
+  };
+  const partyNameStyle: React.CSSProperties = { 
+    fontSize: '36px', 
+    fontWeight: 'bold', 
+    color: '#FF7F50', // Vibrant Coral Primary
+    textAlign: 'center', 
+    marginBottom: '-8px', 
+    fontFamily: '"Playfair Display", serif' 
+  };
+  const sectionStyle: React.CSSProperties = { 
+    marginTop: '32px' 
+  };
+  const textStyle: React.CSSProperties = { 
+    fontSize: '16px', 
+    lineHeight: '1.5' 
+  };
+  const strongStyle: React.CSSProperties = { 
+    color: '#1f2937', 
+    fontWeight: 'bold' 
+  };
+  const buttonContainerStyle: React.CSSProperties = { 
+    marginTop: '32px', 
+    textAlign: 'center',
+    display: 'flex',
+    gap: '16px',
+    justifyContent: 'center'
+  };
   
   const buttonBaseStyle: React.CSSProperties = {
     fontWeight: 'bold',
-    padding: '12px 24px',
-    borderRadius: '0.5rem',
+    padding: '14px 28px',
+    borderRadius: '12px', // Corresponds to --radius
     textDecoration: 'none',
     display: 'inline-block',
     border: 'none',
     cursor: 'pointer',
-    fontSize: '16px'
+    fontSize: '16px',
+    fontFamily: '"PT Sans", sans-serif'
   };
   
   const buttonPrimaryStyle: React.CSSProperties = { 
     ...buttonBaseStyle,
-    backgroundColor: 'hsl(16 100% 66%)', 
+    backgroundColor: '#FF7F50', // Vibrant Coral
     color: '#ffffff', 
-    marginRight: '16px', 
   };
   
   const buttonSecondaryStyle: React.CSSProperties = { 
     ...buttonBaseStyle,
-    backgroundColor: '#e5e7eb',
+    backgroundColor: '#F2D7D9', // Light Peach
     color: '#1f2937',
+    border: '1px solid #D3CEDF' // Soft Lavender Accent
   };
 
-  const footerStyle: React.CSSProperties = { textAlign: 'center', color: '#6b7280', fontSize: '12px', marginTop: '32px' };
+  const footerStyle: React.CSSProperties = { 
+    textAlign: 'center', 
+    color: '#6b7280', 
+    fontSize: '12px', 
+    marginTop: '32px' 
+  };
 
   return (
     <html lang="fr">
       <head>
         <title>{previewText}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
       </head>
       <body style={bodyStyle}>
         <div style={containerStyle}>
@@ -93,7 +139,6 @@ const InvitationEmail = ({ party, neighborId }: InvitationEmailProps) => {
           </div>
           
           <div style={buttonContainerStyle}>
-              <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '16px' }}>Merci de nous dire si vous serez présent :</p>
               <a href={confirmLink} style={buttonPrimaryStyle}>Je serai là !</a>
               <a href={declineLink} style={buttonSecondaryStyle}>Je ne peux pas venir</a>
           </div>
