@@ -6,13 +6,14 @@ import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Calendar, MapPin, Trash2, Send, Users, UserCheck, Pencil, Utensils, UserX, UserPlus, MailQuestion, ChefHat, CheckCircle2 } from 'lucide-react';
+import { Calendar, MapPin, Trash2, Send, Users, UserCheck, Pencil, Utensils, UserX, UserPlus, MailQuestion, ChefHat, CheckCircle2, MousePointerClick } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { sendInvitationEmail } from '@/lib/server-actions';
 import { useState, useMemo } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import Link from 'next/link';
 
 interface PartyCardProps {
   party: Party;
@@ -89,6 +90,15 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
     if (!neighborId) return 'Inconnu';
     return neighborsMap.get(neighborId)?.name?.split(',')[0] ?? 'Inconnu';
   }
+
+  const renderAttendeeListItem = (attendee: Attendee) => (
+    <li key={attendee.neighborId} className="flex items-center justify-between group">
+      <span>{getNeighborName(attendee.neighborId)}</span>
+      <Link href={`/rsvp/${party.id}/${attendee.neighborId}`} title="Tester le lien RSVP" target="_blank" className="opacity-0 group-hover:opacity-100 transition-opacity">
+        <MousePointerClick className="h-4 w-4 text-muted-foreground hover:text-primary"/>
+      </Link>
+    </li>
+  );
 
 
   return (
@@ -168,7 +178,7 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
                         <UserCheck className="h-4 w-4"/> Participants ({attending.length})
                     </div>
                     <ul className="list-disc pl-6 text-sm text-muted-foreground mt-1">
-                        {attending.length > 0 ? attending.map(a => <li key={a.neighborId}>{getNeighborName(a.neighborId)}</li>) : <li>Aucun pour le moment.</li>}
+                        {attending.length > 0 ? attending.map(renderAttendeeListItem) : <li>Aucun pour le moment.</li>}
                     </ul>
 
                     <div className="flex items-center gap-2 text-sm text-red-600 font-medium mt-3">
@@ -182,7 +192,7 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
                         <MailQuestion className="h-4 w-4"/> En attente ({invited.length})
                     </div>
                      <ul className="list-disc pl-6 text-sm text-muted-foreground mt-1">
-                        {invited.length > 0 ? invited.map(a => <li key={a.neighborId}>{getNeighborName(a.neighborId)}</li>) : <li>Aucun pour le moment.</li>}
+                         {invited.length > 0 ? invited.map(renderAttendeeListItem) : <li>Aucun pour le moment.</li>}
                     </ul>
                 </AccordionContent>
             </AccordionItem>
