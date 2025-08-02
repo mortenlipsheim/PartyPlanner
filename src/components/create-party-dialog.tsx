@@ -32,6 +32,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { CalendarIcon, PlusCircle, Trash2 } from 'lucide-react';
 import { Party } from '@/lib/types';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const partySchema = z.object({
   name: z.string().min(3, { message: 'Le nom de la fête doit comporter au moins 3 caractères.' }),
@@ -86,11 +87,12 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="font-headline">Créer une nouvelle fête</DialogTitle>
           <DialogDescription>Remplissez les détails ci-dessous pour planifier votre prochaine rencontre.</DialogDescription>
         </DialogHeader>
+        <ScrollArea className="pr-6 -mr-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
             <FormField
@@ -205,11 +207,12 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
               )}
             />
 
-            <DialogFooter>
+            <DialogFooter className="pt-4">
               <Button type="submit">Créer la Fête</Button>
             </DialogFooter>
           </form>
         </Form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
