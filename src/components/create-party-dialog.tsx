@@ -37,6 +37,7 @@ const partySchema = z.object({
   name: z.string().min(3, { message: 'Le nom de la fête doit comporter au moins 3 caractères.' }),
   description: z.string().min(10, { message: 'La description doit comporter au moins 10 caractères.' }),
   date: z.date({ required_error: 'Une date est requise.' }),
+  time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, { message: "L\'heure doit être au format HH:mm." }),
   place: z.string().min(3, { message: 'Un lieu est requis.' }),
   menu: z.array(z.object({ value: z.string().min(1, { message: 'Le plat ne peut pas être vide.' }) })),
   comments: z.string().optional(),
@@ -58,6 +59,7 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
       name: '',
       description: '',
       place: '',
+      time: '18:00',
       menu: [{ value: 'Burgers' }, { value: 'Hot Dogs' }],
       comments: '',
     },
@@ -69,7 +71,14 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
   });
 
   const onSubmit = (values: CreatePartyFormValues) => {
-    onPartyCreate({ ...values, menu: values.menu.map(item => item.value) });
+    const [hours, minutes] = values.time.split(':').map(Number);
+    const combinedDate = new Date(values.date);
+    combinedDate.setHours(hours);
+    combinedDate.setMinutes(minutes);
+
+    const { time, ...partyData } = values;
+
+    onPartyCreate({ ...partyData, date: combinedDate, menu: values.menu.map(item => item.value) });
     form.reset();
     onOpenChange(false);
   };
@@ -84,24 +93,24 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nom de la fête</FormLabel>
-                    <FormControl><Input placeholder="ex: Barbecue d'été" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nom de la fête</FormLabel>
+                  <FormControl><Input placeholder="ex: Barbecue d'été" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <FormField
                 control={form.control}
                 name="date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Date et heure</FormLabel>
+                    <FormLabel>Date</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -118,6 +127,19 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
                         <Calendar locale={fr} mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
                       </PopoverContent>
                     </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="time"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Heure</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
