@@ -6,11 +6,10 @@ import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Calendar, MapPin, MenuSquare, Trash2, Send, Users, UserCheck, Pencil, Utensils, UserX, UserPlus, MailQuestion, ChefHat, CheckCircle2 } from 'lucide-react';
+import { Calendar, MapPin, Trash2, Send, Users, UserCheck, Pencil, Utensils, UserX, UserPlus, MailQuestion, ChefHat, CheckCircle2 } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
-import { Separator } from './ui/separator';
 import { sendInvitationEmail } from '@/lib/server-actions';
 import { useState, useMemo } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
@@ -34,6 +33,9 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
   const attending = party.attendees.filter(a => a.status === 'attending');
   const declined = party.attendees.filter(a => a.status === 'declined');
   const invited = party.attendees.filter(a => a.status === 'invited');
+  
+  const attendingNeighbors = useMemo(() => neighbors.filter(n => attending.some(a => a.neighborId === n.id)), [neighbors, attending]);
+
 
   const handleInviteSelectionChange = (neighborId: string, checked: boolean) => {
     setSelectedToInvite(prev => {
@@ -59,11 +61,11 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
     if (result.success) {
       const newAttendees: Attendee[] = [...party.attendees];
       neighborsToInvite.forEach(n => {
-        if (!attendeesMap.has(n.id)) {
+        const existingAttendeeIndex = newAttendees.findIndex(a => a.neighborId === n.id);
+        if (existingAttendeeIndex === -1) {
           newAttendees.push({ neighborId: n.id, status: 'invited' });
         } else {
-            const existing = newAttendees.find(a => a.neighborId === n.id);
-            if(existing) existing.status = 'invited';
+          newAttendees[existingAttendeeIndex].status = 'invited';
         }
       });
       await onAttendeeChange(party.id, newAttendees);
@@ -78,9 +80,16 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
 
   const handleMenuAssignment = (itemIndex: number, neighborId: string) => {
     const newMenu = [...party.menu];
-    newMenu[itemIndex].broughtBy = neighborId;
+    const finalNeighborId = neighborId === 'personne' ? null : neighborId;
+    newMenu[itemIndex].broughtBy = finalNeighborId;
     onMenuChange(party.id, newMenu);
   }
+
+  const getNeighborName = (neighborId: string | null) => {
+    if (!neighborId) return 'Inconnu';
+    return neighborsMap.get(neighborId)?.name?.split(',')[0] ?? 'Inconnu';
+  }
+
 
   return (
     <Card className="flex flex-col h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -108,14 +117,14 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
                         {party.menu.map((item, index) => (
                             <div key={index} className="flex items-center justify-between gap-4">
                                 <span className="text-sm">{item.name}</span>
-                                <Select onValueChange={(neighborId) => handleMenuAssignment(index, neighborId)} value={item.broughtBy ?? undefined}>
+                                <Select onValueChange={(neighborId) => handleMenuAssignment(index, neighborId)} value={item.broughtBy ?? 'personne'}>
                                     <SelectTrigger className="w-[180px] h-8">
                                         <ChefHat className="h-4 w-4 mr-2 text-muted-foreground"/>
                                         <SelectValue placeholder="Qui apporte ?" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="personne">Personne</SelectItem>
-                                        {neighbors.map(n => <SelectItem key={n.id} value={n.id}>{n.name.split(',')[0]}</SelectItem>)}
+                                        {attendingNeighbors.map(n => <SelectItem key={n.id} value={n.id}>{n.name.split(',')[0]}</SelectItem>)}
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -135,11 +144,14 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
                                 <Checkbox 
                                     id={`inv-${party.id}-${neighbor.id}`}
                                     onCheckedChange={(checked) => handleInviteSelectionChange(neighbor.id, !!checked)}
-                                    disabled={attendeesMap.get(neighbor.id) === 'attending'}
+                                    disabled={attendeesMap.get(neighbor.id) === 'attending' || isSending}
+                                    checked={selectedToInvite.has(neighbor.id)}
                                 />
                                 <Label htmlFor={`inv-${party.id}-${neighbor.id}`} className='font-normal text-sm w-full flex items-center justify-between'>
                                     {neighbor.name}
                                     {attendeesMap.get(neighbor.id) === 'attending' && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+                                    {attendeesMap.get(neighbor.id) === 'invited' && <MailQuestion className="h-4 w-4 text-blue-500" />}
+                                    {attendeesMap.get(neighbor.id) === 'declined' && <UserX className="h-4 w-4 text-red-500" />}
                                 </Label>
                             </div>
                         ))}
@@ -156,21 +168,21 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
                         <UserCheck className="h-4 w-4"/> Participants ({attending.length})
                     </div>
                     <ul className="list-disc pl-6 text-sm text-muted-foreground mt-1">
-                        {attending.map(a => <li key={a.neighborId}>{neighborsMap.get(a.neighborId)?.name ?? 'Inconnu'}</li>)}
+                        {attending.map(a => <li key={a.neighborId}>{getNeighborName(a.neighborId)}</li>)}
                     </ul>
 
                     <div className="flex items-center gap-2 text-sm text-red-600 font-medium mt-3">
                         <UserX className="h-4 w-4"/> Absents ({declined.length})
                     </div>
                      <ul className="list-disc pl-6 text-sm text-muted-foreground mt-1">
-                        {declined.map(a => <li key={a.neighborId}>{neighborsMap.get(a.neighborId)?.name ?? 'Inconnu'}</li>)}
+                        {declined.map(a => <li key={a.neighborId}>{getNeighborName(a.neighborId)}</li>)}
                     </ul>
 
                     <div className="flex items-center gap-2 text-sm text-blue-600 font-medium mt-3">
                         <MailQuestion className="h-4 w-4"/> En attente ({invited.length})
                     </div>
                      <ul className="list-disc pl-6 text-sm text-muted-foreground mt-1">
-                        {invited.map(a => <li key={a.neighborId}>{neighborsMap.get(a.neighborId)?.name ?? 'Inconnu'}</li>)}
+                        {invited.map(a => <li key={a.neighborId}>{getNeighborName(a.neighborId)}</li>)}
                     </ul>
                 </AccordionContent>
             </AccordionItem>
@@ -200,3 +212,5 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
     </Card>
   );
 }
+
+    

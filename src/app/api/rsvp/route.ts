@@ -1,4 +1,4 @@
-import { updateAttendeeStatus } from '@/lib/party-service';
+import { updateAttendeeStatus, getParty, updateParty } from '@/lib/party-service';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -54,3 +54,5 @@ export async function GET(request: NextRequest) {
     return new NextResponse(`Erreur lors de la mise à jour de votre statut : ${error.message}`, { status: 500 });
   }
 }
+
+    

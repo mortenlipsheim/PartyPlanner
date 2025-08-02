@@ -1,1 +1,30 @@
-[]
+[
+  {
+    "id": "873db1a1-f4f7-4c32-91ac-5d62bb2a369e",
+    "name": "Test party",
+    "description": "Description",
+    "date": "2025-08-16T17:00:00.000Z",
+    "place": "Devant les jeunes",
+    "menu": [
+      {
+        "name": "Burgers",
+        "broughtBy": null
+      },
+      {
+        "name": "Hot Dogs",
+        "broughtBy": null
+      },
+      {
+        "name": "Salade de tomates",
+        "broughtBy": null
+      }
+    ],
+    "comments": "Commentaires",
+    "attendees": [
+      {
+        "neighborId": "68c05dc7-c998-4f2f-bac4-7fca6961d272",
+        "status": "invited"
+      }
+    ]
+  }
+]
