@@ -88,14 +88,14 @@
       },
       {
         "name": "Porridge",
-        "broughtBy": null
+        "broughtBy": "68c05dc7-c998-4f2f-bac4-7fca6961d272"
       }
     ],
     "comments": "",
     "attendees": [
       {
         "neighborId": "68c05dc7-c998-4f2f-bac4-7fca6961d272",
-        "status": "invited"
+        "status": "attending"
       }
     ]
   }

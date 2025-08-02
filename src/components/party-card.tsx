@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Party, Neighbor, MenuItem, Attendee } from '@/lib/types';
@@ -147,7 +148,7 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="personne">Personne</SelectItem>
-                                        {attendingNeighbors.map(n => <SelectItem key={n.id} value={n.id}>{n.name.split(',')[0]}</SelectItem>)}
+                                        {attendingNeighbors.map(n => <SelectItem key={n.id} value={n.id}>{n.name.split('\n')[0].split(',')[0]}</SelectItem>)}
                                     </SelectContent>
                                 </Select>
                             </div>
