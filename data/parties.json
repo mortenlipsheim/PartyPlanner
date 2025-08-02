@@ -8,11 +8,11 @@
     "menu": [
       {
         "name": "Burgers",
-        "broughtBy": null
+        "broughtBy": "68c05dc7-c998-4f2f-bac4-7fca6961d272"
       },
       {
         "name": "Hot Dogs",
-        "broughtBy": null
+        "broughtBy": "f874b46a-b256-44b1-9bf8-d802eb90cbf1"
       },
       {
         "name": "Salade de tomates",
@@ -23,6 +23,10 @@
     "attendees": [
       {
         "neighborId": "68c05dc7-c998-4f2f-bac4-7fca6961d272",
+        "status": "invited"
+      },
+      {
+        "neighborId": "f874b46a-b256-44b1-9bf8-d802eb90cbf1",
         "status": "invited"
       }
     ]

@@ -18,8 +18,7 @@ interface RsvpPageProps {
   };
 }
 
-export default function RsvpPage({ params }: RsvpPageProps) {
-  const { partyId, neighborId } = params;
+export default function RsvpPage({ params: { partyId, neighborId } }: RsvpPageProps) {
   const [party, setParty] = useState<Party | null>(null);
   const [selectedMenuItem, setSelectedMenuItem] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);

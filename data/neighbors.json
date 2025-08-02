@@ -5,5 +5,12 @@
     "name": "Gausland\nAlexandra, Morten et Téa",
     "email": "morten@gmail.com",
     "phone": "0651314881"
+  },
+  {
+    "id": "f874b46a-b256-44b1-9bf8-d802eb90cbf1",
+    "address": "53 rue something",
+    "name": "Testfammily\nJon",
+    "email": "admin@diy-viking.com",
+    "phone": ""
   }
 ]
