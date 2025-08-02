@@ -41,6 +41,7 @@ const InvitationEmail = ({ party, neighborId }: InvitationEmailProps) => {
     display: 'inline-block',
     border: 'none',
     cursor: 'pointer',
+    fontSize: '16px'
   };
   
   const buttonPrimaryStyle: React.CSSProperties = { 
