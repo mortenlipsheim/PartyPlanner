@@ -38,7 +38,7 @@ const partySchema = z.object({
   name: z.string().min(3, { message: 'Le nom de la fête doit comporter au moins 3 caractères.' }),
   description: z.string().min(10, { message: 'La description doit comporter au moins 10 caractères.' }),
   date: z.date({ required_error: 'Une date est requise.' }),
-  time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, { message: "L\'heure doit être au format HH:mm." }),
+  time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, { message: "L\\'heure doit être au format HH:mm." }),
   place: z.string().min(3, { message: 'Un lieu est requis.' }),
   menu: z.array(z.object({ value: z.string().min(1, { message: 'Le plat ne peut pas être vide.' }) })),
   comments: z.string().optional(),
@@ -92,9 +92,9 @@ export function CreatePartyDialog({ children, open, onOpenChange, onPartyCreate 
           <DialogTitle className="font-headline">Créer une nouvelle fête</DialogTitle>
           <DialogDescription>Remplissez les détails ci-dessous pour planifier votre prochaine rencontre.</DialogDescription>
         </DialogHeader>
-        <ScrollArea className="pr-6 -mr-6">
+        <ScrollArea className="pr-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4 pr-1">
             <FormField
               control={form.control}
               name="name"
