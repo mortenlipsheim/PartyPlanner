@@ -14,4 +14,5 @@ export type Party = {
   place: string;
   menu: string[];
   comments: string;
+  attendees: string[]; // Array of neighbor IDs
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Party } from '@/lib/types';
+import { Party, Neighbor } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { CreatePartyDialog } from '@/components/create-party-dialog';
@@ -16,6 +16,7 @@ const initialParties: Party[] = [
     place: 'Pavillon du parc communautaire',
     menu: ['Hot-dogs', 'Hamburgers', 'Maïs grillé', 'Pastèque', 'Salade de pommes de terre', 'Brownies'],
     comments: 'Apportez vos chaises de jardin et vos jeux préférés !',
+    attendees: ['2', '3'],
   },
   {
     id: '2',
@@ -25,23 +26,44 @@ const initialParties: Party[] = [
     place: 'L\'allée des Miller (123 Rue du Chêne)',
     menu: ['Chili', 'Saucisses de maïs', 'Biscuits à la citrouille', 'Cidre de pomme'],
     comments: 'Le meilleur costume remporte un prix !',
+    attendees: [],
   },
+];
+
+const initialNeighbors: Neighbor[] = [
+  { id: '1', name: 'Les Martins', address: '123 Rue de la Paix', email: 'martin@example.com', phone: '0612345678' },
+  { id: '2', name: 'Jeanne Dupont', address: '456 Avenue des Champs-Élysées', email: 'jeanne.d@example.com', phone: '0687654321' },
+  { id: '3', name: 'La famille Garcia', address: '789 Boulevard Saint-Germain', email: 'garcia.fam@example.com', phone: '0700112233' },
+  { id: '4', name: 'Robert Leroy', address: '101 Place de la Concorde', email: 'robert.l@example.com', phone: '0655443322' },
 ];
 
 
 export default function Home() {
   const [parties, setParties] = useState<Party[]>(initialParties);
+  const [neighbors, setNeighbors] = useState<Neighbor[]>(initialNeighbors);
   const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
 
-  const handleAddParty = (newParty: Omit<Party, 'id'>) => {
+  const handleAddParty = (newParty: Omit<Party, 'id' | 'attendees'>) => {
     setParties((prevParties) => [
       ...prevParties,
-      { ...newParty, id: (prevParties.length + 1).toString() },
+      { ...newParty, id: (prevParties.length + 1).toString(), attendees: [] },
     ]);
   };
   
   const handleDeleteParty = (partyId: string) => {
     setParties(parties.filter(p => p.id !== partyId));
+  };
+  
+  const handleAttendeeChange = (partyId: string, neighborId: string, isAttending: boolean) => {
+    setParties(parties.map(party => {
+      if (party.id === partyId) {
+        const attendees = isAttending
+          ? [...party.attendees, neighborId]
+          : party.attendees.filter(id => id !== neighborId);
+        return { ...party, attendees };
+      }
+      return party;
+    }));
   };
 
 
@@ -60,7 +82,13 @@ export default function Home() {
       {parties.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {parties.map((party) => (
-            <PartyCard key={party.id} party={party} onDelete={handleDeleteParty} />
+            <PartyCard 
+              key={party.id} 
+              party={party} 
+              neighbors={neighbors}
+              onDelete={handleDeleteParty}
+              onAttendeeChange={handleAttendeeChange}
+            />
           ))}
         </div>
       ) : (
