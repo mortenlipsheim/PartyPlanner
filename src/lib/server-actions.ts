@@ -4,19 +4,19 @@ import { Party, Neighbor } from '@/lib/types';
 import { Resend } from 'resend';
 import InvitationEmail from '@/components/email-templates/invitation-email';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 interface SendInvitationEmailProps {
     party: Party;
     neighbors: Neighbor[];
 }
 
 export async function sendInvitationEmail({ party, neighbors }: SendInvitationEmailProps): Promise<{ success: boolean; error?: string }> {
-    if (!process.env.RESEND_API_KEY) {
+    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 're_123456789') {
         console.error('Resend API key is not configured.');
-        return { success: false, error: "La configuration du service d'email est incomplète sur le serveur." };
+        return { success: false, error: "La configuration du service d'email est incomplète sur le serveur. Veuillez ajouter votre clé RESEND_API_KEY dans le fichier .env.local" };
     }
     
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
     const emailsAndNeighbors = neighbors
         .map(n => ({ email: n.email, neighborId: n.id }))
         .filter((item): item is { email: string; neighborId: string } => typeof item.email === 'string' && item.email.length > 0);
