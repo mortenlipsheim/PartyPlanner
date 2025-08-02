@@ -32,7 +32,6 @@ const InvitationEmail = ({ party, neighborId }: InvitationEmailProps) => {
   const strongStyle: React.CSSProperties = { color: '#1f2937', fontWeight: 'bold' };
   const buttonContainerStyle: React.CSSProperties = { marginTop: '32px', textAlign: 'center' };
   
-  // Amélioration du style des boutons
   const buttonBaseStyle: React.CSSProperties = {
     fontWeight: 'bold',
     padding: '12px 24px',
@@ -53,7 +52,7 @@ const InvitationEmail = ({ party, neighborId }: InvitationEmailProps) => {
   
   const buttonSecondaryStyle: React.CSSProperties = { 
     ...buttonBaseStyle,
-    backgroundColor: '#e5e7eb', // Gris clair
+    backgroundColor: '#e5e7eb',
     color: '#1f2937',
   };
 
