@@ -1,5 +1,10 @@
-# Firebase Studio
+# Party Planner Pro
 
-This is a NextJS starter in Firebase Studio.
+This is a Next.js application for planning parties with your neighbors, built with Firebase Studio.
 
-To get started, take a look at src/app/page.tsx.
+## Pages
+
+- **`/`**: The main dashboard showing all upcoming parties.
+- **`/neighbors`**: A registry of all your neighbors.
+
+To get started, run `npm run dev` and open http://localhost:9002.
