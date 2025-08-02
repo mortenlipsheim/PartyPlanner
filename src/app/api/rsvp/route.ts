@@ -1,3 +1,4 @@
+
 'use server';
 import { updateAttendeeStatus, getParty, updateParty } from '@/lib/party-service';
 import { NextRequest, NextResponse } from 'next/server';
@@ -15,15 +16,16 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    await updateAttendeeStatus(partyId, neighborId, status);
-    
     if (status === 'attending') {
-      // Redirect to the menu selection page
+      // Redirect directly to the menu selection page.
+      // This page will handle updating the status to 'attending'.
       const rsvpPageUrl = new URL(`/rsvp/${partyId}/${neighborId}`, baseUrl);
       return NextResponse.redirect(rsvpPageUrl);
     }
     
-    // For "declined", show a simple confirmation page.
+    // For "declined", update status and show a simple confirmation page.
+    await updateAttendeeStatus(partyId, neighborId, 'declined');
+
     const message = "Nous avons bien noté votre absence. Peut-être une prochaine fois !";
     const htmlResponse = `
       <!DOCTYPE html>

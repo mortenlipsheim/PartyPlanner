@@ -70,5 +70,33 @@
         "status": "invited"
       }
     ]
+  },
+  {
+    "id": "622f64ff-4672-4f4d-b5e1-679a3214dc84",
+    "name": "Test party 3",
+    "description": "testing fef ",
+    "date": "2025-08-12T16:00:00.000Z",
+    "place": "Pavillon du parc communautaire",
+    "menu": [
+      {
+        "name": "Burgers",
+        "broughtBy": null
+      },
+      {
+        "name": "Hot Dogs",
+        "broughtBy": null
+      },
+      {
+        "name": "Porridge",
+        "broughtBy": null
+      }
+    ],
+    "comments": "",
+    "attendees": [
+      {
+        "neighborId": "68c05dc7-c998-4f2f-bac4-7fca6961d272",
+        "status": "invited"
+      }
+    ]
   }
 ]

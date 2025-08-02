@@ -1,9 +1,9 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Party } from '@/lib/types';
-import { getParty, assignMenuItem } from '@/lib/party-service';
+import { getParty, assignMenuItem, updateAttendeeStatus } from '@/lib/party-service';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -26,22 +26,26 @@ export default function RsvpPage({ params }: RsvpPageProps) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
+  
+  const fetchPartyAndConfirmAttendance = useCallback(async () => {
+    setLoading(true);
+    try {
+      // First, confirm attendance
+      await updateAttendeeStatus(partyId, neighborId, 'attending');
+      // Then, fetch the updated party details
+      const partyData = await getParty(partyId);
+      setParty(partyData);
+    } catch (error) {
+      console.error('Failed to fetch party details or confirm attendance', error);
+      toast({ title: 'Erreur', description: "Impossible de confirmer votre présence ou de charger les détails de la fête.", variant: 'destructive'});
+    } finally {
+      setLoading(false);
+    }
+  }, [partyId, neighborId, toast]);
 
   useEffect(() => {
-    const fetchPartyDetails = async () => {
-      setLoading(true);
-      try {
-        const partyData = await getParty(partyId);
-        setParty(partyData);
-      } catch (error) {
-        console.error('Failed to fetch party details', error);
-        toast({ title: 'Erreur', description: "Impossible de charger les détails de la fête.", variant: 'destructive'});
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPartyDetails();
-  }, [partyId, toast]);
+    fetchPartyAndConfirmAttendance();
+  }, [fetchPartyAndConfirmAttendance]);
 
   const availableMenuItems = party?.menu.filter(item => item.broughtBy === null) ?? [];
 
