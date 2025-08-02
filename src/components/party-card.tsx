@@ -11,6 +11,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { Separator } from './ui/separator';
+import { sendInvitationEmail } from '@/lib/server-actions';
+import { useState } from 'react';
 
 interface PartyCardProps {
   party: Party;
@@ -21,43 +23,39 @@ interface PartyCardProps {
 }
 
 export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange }: PartyCardProps) {
-  const handleInvite = () => {
-    const attendees = neighbors.filter(n => party.attendees.includes(n.id));
-    const attendeeEmails = attendees.map(a => a.email).filter(Boolean);
-
-    if (attendeeEmails.length === 0) {
+  const [isSending, setIsSending] = useState(false);
+  
+  const handleInvite = async () => {
+    const attendees = neighbors.filter(n => party.attendees.includes(n.id) && n.email);
+    
+    if (attendees.length === 0) {
       toast({
-        title: 'Aucun invité sélectionné',
-        description: 'Veuillez sélectionner au moins un invité à qui envoyer une invitation.',
+        title: 'Aucun invité avec e-mail',
+        description: "Veuillez sélectionner au moins un invité avec une adresse e-mail pour envoyer une invitation.",
         variant: 'destructive',
       });
       return;
     }
     
-    // In a real app, this would trigger a backend service.
-    // Here, we'll simulate it by opening the mail client.
-    const subject = `Invitation : ${party.name}`;
-    const body = `Bonjour,
-
-Vous êtes invité(e) à la fête : ${party.name} !
-Elle aura lieu le ${format(party.date, 'PPPP p', { locale: fr })} à ${party.place}.
-
-Au menu : ${party.menu.join(', ')}.
-${party.comments}
-
-Pourriez-vous nous indiquer si vous serez présent ?
-Cliquez ici pour confirmer : [Lien de confirmation]
-Cliquez ici pour décliner : [Lien de non participation]
-
-Merci !`;
-    
-    window.location.href = `mailto:${attendeeEmails.join(',')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-
-    toast({
-      title: 'Invitations envoyées !',
-      description: `Les invitations pour "${party.name}" ont été envoyées aux invités sélectionnés.`,
+    setIsSending(true);
+    const result = await sendInvitationEmail({
+      party,
+      attendees,
     });
+    setIsSending(false);
+
+    if (result.success) {
+      toast({
+        title: 'Invitations envoyées !',
+        description: `Les invitations pour "${party.name}" sont en cours d'envoi.`,
+      });
+    } else {
+       toast({
+        title: "Erreur d'envoi",
+        description: result.error,
+        variant: 'destructive',
+      });
+    }
   };
 
   const totalAttendees = party.attendees.length;
@@ -131,9 +129,16 @@ Merci !`;
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
-        <Button onClick={handleInvite}>
-          <Send className="mr-2 h-4 w-4" />
-          Inviter
+        <Button onClick={handleInvite} disabled={isSending}>
+          {isSending ? (
+            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          ) : (
+            <Send className="mr-2 h-4 w-4" />
+          )}
+          {isSending ? 'Envoi...' : 'Inviter'}
         </Button>
       </CardFooter>
     </Card>
