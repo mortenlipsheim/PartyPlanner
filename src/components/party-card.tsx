@@ -85,9 +85,19 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
   const handleMenuAssignment = (itemIndex: number, neighborId: string) => {
     const newMenu = [...party.menu];
     const finalNeighborId = neighborId === 'personne' ? null : neighborId;
+    
+    // Ensure one person brings at most one item from the menu
+    if (finalNeighborId) {
+        newMenu.forEach((item, idx) => {
+            if (item.broughtBy === finalNeighborId && idx !== itemIndex) {
+                item.broughtBy = null;
+            }
+        });
+    }
+
     newMenu[itemIndex].broughtBy = finalNeighborId;
     onMenuChange(party.id, newMenu);
-  }
+}
 
   const getNeighborName = (neighborId: string | null) => {
     if (!neighborId) return 'Inconnu';

@@ -61,11 +61,11 @@ export function EditPartyDialog({ party, neighbors, open, onOpenChange, onPartyU
     resolver: zodResolver(partySchema),
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control: form.control,
     name: 'menu',
   });
-
+  
   const attendingNeighbors = useMemo(() => {
     const attendingIds = new Set(party.attendees.filter(a => a.status === 'attending').map(a => a.neighborId));
     return neighbors.filter(n => attendingIds.has(n.id));
@@ -83,7 +83,26 @@ export function EditPartyDialog({ party, neighbors, open, onOpenChange, onPartyU
         comments: party.comments,
       });
     }
-  }, [party, form]);
+  }, [party, form, open]); // Added open to reset form on re-open
+
+  const handleMenuAssignment = (itemIndex: number, neighborId: string) => {
+    const newMenu = form.getValues('menu');
+    const finalNeighborId = neighborId === 'personne' ? null : neighborId;
+    
+    // Ensure one person brings at most one item from the menu
+    if (finalNeighborId) {
+      newMenu.forEach((item, idx) => {
+          if (item.broughtBy === finalNeighborId && idx !== itemIndex) {
+            // This person was bringing something else, un-assign it
+            update(idx, { ...newMenu[idx], broughtBy: null });
+          }
+      });
+    }
+
+    // Assign the new item
+    update(itemIndex, { ...newMenu[itemIndex], broughtBy: finalNeighborId });
+  };
+
 
   const onSubmit = (values: EditPartyFormValues) => {
     const [hours, minutes] = values.time.split(':').map(Number);
@@ -203,7 +222,7 @@ export function EditPartyDialog({ party, neighbors, open, onOpenChange, onPartyU
                                 name={`menu.${index}.broughtBy`}
                                 render={({ field }) => (
                                     <FormItem>
-                                      <Select onValueChange={field.onChange} value={field.value ?? 'personne'}>
+                                      <Select onValueChange={(value) => handleMenuAssignment(index, value)} value={field.value ?? 'personne'}>
                                           <FormControl>
                                             <SelectTrigger className="w-[180px]">
                                                 <SelectValue placeholder="Qui apporte ?" />
