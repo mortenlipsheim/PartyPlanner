@@ -35,7 +35,10 @@ export function PartyCard({ party, neighbors, onEdit, onDelete, onAttendeeChange
   const declined = party.attendees.filter(a => a.status === 'declined');
   const invited = party.attendees.filter(a => a.status === 'invited');
   
-  const attendingNeighbors = useMemo(() => neighbors.filter(n => attending.some(a => a.neighborId === n.id)), [neighbors, attending]);
+  const attendingNeighbors = useMemo(() => {
+    const attendingIds = new Set(party.attendees.filter(a => a.status === 'attending').map(a => a.neighborId));
+    return neighbors.filter(n => attendingIds.has(n.id));
+  }, [party.attendees, neighbors]);
 
 
   const handleInviteSelectionChange = (neighborId: string, checked: boolean) => {

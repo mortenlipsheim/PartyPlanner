@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { z } from 'zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -66,7 +66,10 @@ export function EditPartyDialog({ party, neighbors, open, onOpenChange, onPartyU
     name: 'menu',
   });
 
-  const attendingNeighbors = neighbors.filter(n => party.attendees.some(a => a.neighborId === n.id && a.status === 'attending'));
+  const attendingNeighbors = useMemo(() => {
+    const attendingIds = new Set(party.attendees.filter(a => a.status === 'attending').map(a => a.neighborId));
+    return neighbors.filter(n => attendingIds.has(n.id));
+  }, [party.attendees, neighbors]);
   
   useEffect(() => {
     if (party) {
@@ -200,7 +203,7 @@ export function EditPartyDialog({ party, neighbors, open, onOpenChange, onPartyU
                                 name={`menu.${index}.broughtBy`}
                                 render={({ field }) => (
                                     <FormItem>
-                                      <Select onValueChange={field.onChange} value={field.value ?? undefined}>
+                                      <Select onValueChange={field.onChange} value={field.value ?? 'personne'}>
                                           <FormControl>
                                             <SelectTrigger className="w-[180px]">
                                                 <SelectValue placeholder="Qui apporte ?" />
