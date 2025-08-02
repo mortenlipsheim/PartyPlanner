@@ -87,8 +87,47 @@ export const updateAttendeeStatus = async (partyId: string, neighborId: string, 
       // For robustness, we can add them.
       party.attendees.push({ neighborId, status });
     } else {
+      // If they declined, remove any item they were bringing
+      if (status === 'declined' && party.attendees[attendeeIndex].status === 'attending') {
+          party.menu.forEach(item => {
+              if (item.broughtBy === neighborId) {
+                  item.broughtBy = null;
+              }
+          });
+      }
       party.attendees[attendeeIndex].status = status;
     }
   
-    return await updateParty(partyId, { attendees: party.attendees });
+    return await updateParty(partyId, { attendees: party.attendees, menu: party.menu });
+};
+
+export const assignMenuItem = async (partyId: string, menuItemName: string, neighborId: string) => {
+    const party = await getParty(partyId);
+    if (!party) {
+        throw new Error('Party not found');
+    }
+
+    const menuItem = party.menu.find(item => item.name === menuItemName);
+    if (!menuItem) {
+        throw new Error('Menu item not found');
+    }
+
+    // Check if the item is already taken
+    if (menuItem.broughtBy !== null) {
+        throw new Error('This item is already being brought by someone else.');
+    }
+    
+    // Unassign any other item this neighbor was bringing
+    party.menu.forEach(item => {
+        if (item.broughtBy === neighborId) {
+            item.broughtBy = null;
+        }
+    });
+
+    // Assign the new item
+    menuItem.broughtBy = neighborId;
+
+    await updateParty(partyId, { menu: party.menu });
+
+    return party;
 };

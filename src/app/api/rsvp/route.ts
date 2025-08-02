@@ -7,6 +7,8 @@ export async function GET(request: NextRequest) {
   const partyId = searchParams.get('partyId');
   const neighborId = searchParams.get('neighborId');
   const status = searchParams.get('status');
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
+
 
   if (!partyId || !neighborId || (status !== 'attending' && status !== 'declined')) {
     return new NextResponse('Paramètres de requête manquants ou invalides', { status: 400 });
@@ -15,11 +17,14 @@ export async function GET(request: NextRequest) {
   try {
     await updateAttendeeStatus(partyId, neighborId, status);
     
-    const message = status === 'attending' 
-      ? "Votre participation a bien été enregistrée. Merci !" 
-      : "Nous avons bien noté votre absence. Peut-être une prochaine fois !";
-
-    // Simple HTML response page
+    if (status === 'attending') {
+      // Redirect to the menu selection page
+      const rsvpPageUrl = new URL(`/rsvp/${partyId}/${neighborId}`, baseUrl);
+      return NextResponse.redirect(rsvpPageUrl);
+    }
+    
+    // For "declined", show a simple confirmation page.
+    const message = "Nous avons bien noté votre absence. Peut-être une prochaine fois !";
     const htmlResponse = `
       <!DOCTYPE html>
       <html lang="fr">
