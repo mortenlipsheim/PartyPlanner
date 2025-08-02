@@ -28,6 +28,8 @@ import { Neighbor } from '@/lib/types';
 const neighborSchema = z.object({
   address: z.string().min(5, { message: 'Veuillez saisir une adresse valide.' }),
   name: z.string().min(2, { message: 'Le nom doit contenir au moins 2 caractères.' }),
+  email: z.string().email({ message: "Veuillez saisir une adresse e-mail valide." }).optional().or(z.literal('')),
+  phone: z.string().optional(),
 });
 
 type AddNeighborFormValues = z.infer<typeof neighborSchema>;
@@ -36,7 +38,7 @@ interface AddNeighborDialogProps {
   children: React.ReactNode;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onNeighborCreate: (neighbor: Omit<Neighbor, 'id' | 'email' | 'phone'>) => void;
+  onNeighborCreate: (neighbor: Omit<Neighbor, 'id'>) => void;
 }
 
 export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCreate }: AddNeighborDialogProps) {
@@ -45,6 +47,8 @@ export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCrea
     defaultValues: {
       address: '',
       name: '',
+      email: '',
+      phone: '',
     },
   });
 
@@ -61,7 +65,7 @@ export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCrea
         <DialogHeader>
           <DialogTitle className="font-headline">Ajouter un voisin</DialogTitle>
           <DialogDescription>
-            Saisissez l'adresse et le nom de votre voisin pour l'ajouter au registre.
+            Saisissez les informations de votre voisin pour l'ajouter au registre.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -87,6 +91,32 @@ export function AddNeighborDialog({ children, open, onOpenChange, onNeighborCrea
                   <FormLabel>Nom(s)</FormLabel>
                   <FormControl>
                     <Textarea placeholder="ex: Les Martin, Jeanne Dupont..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>E-mail (Optionnel)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="nom@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Téléphone (Optionnel)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="06 12 34 56 78" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Mail, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Mail, Trash2, Phone } from 'lucide-react';
 import { Neighbor } from '@/lib/types';
 
 interface NeighborTableProps {
@@ -25,13 +25,30 @@ interface NeighborTableProps {
 }
 
 export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
-  const handleSendEmail = (name: string) => {
-    toast({
-      title: 'Action non disponible',
-      description: `La fonctionnalité d'envoi d'e-mail a été désactivée.`,
-      variant: 'destructive',
-    });
+  const handleSendEmail = (neighbor: Neighbor) => {
+    if (neighbor.email) {
+      window.location.href = `mailto:${neighbor.email}`;
+    } else {
+      toast({
+        title: 'E-mail non disponible',
+        description: `Aucune adresse e-mail n'est enregistrée pour ${neighbor.name}.`,
+        variant: 'destructive',
+      });
+    }
   };
+
+  const handleCall = (neighbor: Neighbor) => {
+    if (neighbor.phone) {
+      window.location.href = `tel:${neighbor.phone}`;
+    } else {
+      toast({
+        title: 'Téléphone non disponible',
+        description: `Aucun numéro de téléphone n'est enregistré pour ${neighbor.name}.`,
+        variant: 'destructive',
+      });
+    }
+  };
+
 
   return (
     <div className="rounded-lg border bg-card">
@@ -40,6 +57,8 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
           <TableRow>
             <TableHead>Adresse</TableHead>
             <TableHead>Nom(s)</TableHead>
+            <TableHead>E-mail</TableHead>
+            <TableHead>Téléphone</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
             </TableHead>
@@ -51,6 +70,8 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
               <TableRow key={neighbor.id}>
                 <TableCell className="font-medium">{neighbor.address}</TableCell>
                 <TableCell style={{ whiteSpace: 'pre-wrap' }}>{neighbor.name}</TableCell>
+                <TableCell>{neighbor.email}</TableCell>
+                <TableCell>{neighbor.phone}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -60,9 +81,13 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleSendEmail(neighbor.name)}>
+                      <DropdownMenuItem onClick={() => handleSendEmail(neighbor)}>
                         <Mail className="mr-2 h-4 w-4" />
-                        Envoyer un e-mail de mise à jour
+                        Envoyer un e-mail
+                      </DropdownMenuItem>
+                       <DropdownMenuItem onClick={() => handleCall(neighbor)}>
+                        <Phone className="mr-2 h-4 w-4" />
+                        Appeler
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => onDelete(neighbor.id)}
@@ -78,7 +103,7 @@ export function NeighborTable({ neighbors, onDelete }: NeighborTableProps) {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={3} className="h-24 text-center">
+              <TableCell colSpan={5} className="h-24 text-center">
                 Aucun voisin trouvé. Ajoutez-en un pour commencer !
               </TableCell>
             </TableRow>
