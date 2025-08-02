@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -18,9 +19,14 @@ export default function NeighborsPage() {
 
   const fetchAndSetNeighbors = async () => {
     setLoading(true);
-    const neighborsData = await getNeighbors();
-    setNeighbors(neighborsData);
-    setLoading(false);
+    try {
+        const neighborsData = await getNeighbors();
+        setNeighbors(neighborsData);
+    } catch (error) {
+        console.error("Failed to fetch neighbors:", error);
+    } finally {
+        setLoading(false);
+    }
   };
 
   useEffect(() => {

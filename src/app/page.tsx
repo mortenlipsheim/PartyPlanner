@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -36,35 +37,36 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const refreshParties = async () => {
+  // This function will be called by child components to trigger a data refresh
+  const refreshData = async () => {
     const partiesData = await getParties();
     setParties(partiesData.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
   }
 
   const handleAddParty = async (newPartyData: Omit<Party, 'id'>) => {
     await createParty(newPartyData);
-    await refreshParties();
+    await refreshData();
   };
   
   const handleUpdateParty = async (partyId: string, updatedPartyData: Partial<Omit<Party, 'id'>>) => {
     await updateParty(partyId, updatedPartyData);
     setEditingParty(null);
-    await refreshParties();
+    await refreshData();
   };
 
   const handleDeleteParty = async (partyId: string) => {
     await deleteParty(partyId);
-    await refreshParties();
+    await refreshData();
   };
   
   const handleAttendeeChange = async (partyId: string, updatedAttendees: Party['attendees']) => {
     await updateParty(partyId, { attendees: updatedAttendees });
-    await refreshParties();
+    await refreshData();
   };
 
   const handleMenuChange = async (partyId: string, updatedMenu: Party['menu']) => {
     await updateParty(partyId, { menu: updatedMenu });
-    await refreshParties();
+    await refreshData();
   };
 
   return (
