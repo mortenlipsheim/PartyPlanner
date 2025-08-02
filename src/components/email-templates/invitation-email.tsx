@@ -31,8 +31,31 @@ const InvitationEmail = ({ party, neighborId }: InvitationEmailProps) => {
   const textStyle: React.CSSProperties = { fontSize: '16px', lineHeight: '1.5', color: '#374151' };
   const strongStyle: React.CSSProperties = { color: '#1f2937', fontWeight: 'bold' };
   const buttonContainerStyle: React.CSSProperties = { marginTop: '32px', textAlign: 'center' };
-  const buttonPrimaryStyle: React.CSSProperties = { backgroundColor: 'hsl(16 100% 66%)', color: '#ffffff', fontWeight: 'bold', padding: '12px 24px', borderRadius: '0.375rem', textDecoration: 'none', marginRight: '16px', display: 'inline-block' };
-  const buttonSecondaryStyle: React.CSSProperties = { backgroundColor: '#d1d5db', color: '#1f2937', fontWeight: 'bold', padding: '12px 24px', borderRadius: '0.375rem', textDecoration: 'none', display: 'inline-block' };
+  
+  // Amélioration du style des boutons
+  const buttonBaseStyle: React.CSSProperties = {
+    fontWeight: 'bold',
+    padding: '12px 24px',
+    borderRadius: '0.5rem',
+    textDecoration: 'none',
+    display: 'inline-block',
+    border: 'none',
+    cursor: 'pointer',
+  };
+  
+  const buttonPrimaryStyle: React.CSSProperties = { 
+    ...buttonBaseStyle,
+    backgroundColor: 'hsl(16 100% 66%)', 
+    color: '#ffffff', 
+    marginRight: '16px', 
+  };
+  
+  const buttonSecondaryStyle: React.CSSProperties = { 
+    ...buttonBaseStyle,
+    backgroundColor: '#e5e7eb', // Gris clair
+    color: '#1f2937',
+  };
+
   const footerStyle: React.CSSProperties = { textAlign: 'center', color: '#6b7280', fontSize: '12px', marginTop: '32px' };
 
   return (
