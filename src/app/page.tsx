@@ -18,25 +18,26 @@ export default function Home() {
   const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
   const [editingParty, setEditingParty] = useState<Party | null>(null);
 
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [partiesData, neighborsData] = await Promise.all([getParties(), getNeighbors()]);
+      setParties(partiesData.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+      setNeighbors(neighborsData);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [partiesData, neighborsData] = await Promise.all([getParties(), getNeighbors()]);
-        setParties(partiesData.sort((a,b) => a.date.getTime() - b.date.getTime()));
-        setNeighbors(neighborsData);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, []);
 
   const refreshParties = async () => {
     const partiesData = await getParties();
-    setParties(partiesData.sort((a,b) => a.date.getTime() - b.date.getTime()));
+    setParties(partiesData.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
   }
 
   const handleAddParty = async (newPartyData: Omit<Party, 'id'>) => {
