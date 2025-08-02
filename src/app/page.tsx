@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Party, Neighbor } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { PlusCircle, UtensilsCrossed } from 'lucide-react';
@@ -19,11 +19,11 @@ export default function Home() {
   const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
   const [editingParty, setEditingParty] = useState<Party | null>(null);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const [partiesData, neighborsData] = await Promise.all([getParties(), getNeighbors()]);
-      const sortedParties = partiesData.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      const sortedParties = partiesData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       setParties(sortedParties);
       setNeighbors(neighborsData);
     } catch (error) {
@@ -31,44 +31,28 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  // This function will be called by child components to trigger a data refresh
-  const refreshData = async () => {
-    const partiesData = await getParties();
-    setParties(partiesData.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
-  }
+  }, [fetchData]);
 
   const handleAddParty = async (newPartyData: Omit<Party, 'id'>) => {
     await createParty(newPartyData);
-    await refreshData();
+    await fetchData();
   };
   
   const handleUpdateParty = async (partyId: string, updatedPartyData: Partial<Omit<Party, 'id'>>) => {
     await updateParty(partyId, updatedPartyData);
     setEditingParty(null);
-    await refreshData();
+    await fetchData();
   };
 
   const handleDeleteParty = async (partyId: string) => {
     await deleteParty(partyId);
-    await refreshData();
+    await fetchData();
   };
   
-  const handleAttendeeChange = async (partyId: string, updatedAttendees: Party['attendees']) => {
-    await updateParty(partyId, { attendees: updatedAttendees });
-    await refreshData();
-  };
-
-  const handleMenuChange = async (partyId: string, updatedMenu: Party['menu']) => {
-    await updateParty(partyId, { menu: updatedMenu });
-    await refreshData();
-  };
-
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-8">
@@ -99,8 +83,8 @@ export default function Home() {
               neighbors={neighbors}
               onEdit={() => setEditingParty(party)}
               onDelete={handleDeleteParty}
-              onAttendeeChange={handleAttendeeChange}
-              onMenuChange={handleMenuChange}
+              onAttendeeChange={(partyId, attendees) => updateParty(partyId, { attendees }).then(fetchData)}
+              onMenuChange={(partyId, menu) => updateParty(partyId, { menu }).then(fetchData)}
             />
           ))}
         </div>

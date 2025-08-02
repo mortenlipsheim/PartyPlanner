@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Neighbor } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
@@ -17,7 +17,7 @@ export default function NeighborsPage() {
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const [editingNeighbor, setEditingNeighbor] = useState<Neighbor | null>(null);
 
-  const fetchAndSetNeighbors = async () => {
+  const fetchAndSetNeighbors = useCallback(async () => {
     setLoading(true);
     try {
         const neighborsData = await getNeighbors();
@@ -27,11 +27,11 @@ export default function NeighborsPage() {
     } finally {
         setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchAndSetNeighbors();
-  }, []);
+  }, [fetchAndSetNeighbors]);
 
   const handleAddNeighbor = async (newNeighbor: Omit<Neighbor, 'id'>) => {
     await createNeighbor(newNeighbor);
