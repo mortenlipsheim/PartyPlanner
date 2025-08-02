@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Party, MenuItem } from '@/lib/types';
+import { Party } from '@/lib/types';
 import { getParty, assignMenuItem } from '@/lib/party-service';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -18,7 +18,8 @@ interface RsvpPageProps {
   };
 }
 
-export default function RsvpPage({ params: { partyId, neighborId } }: RsvpPageProps) {
+export default function RsvpPage({ params }: RsvpPageProps) {
+  const { partyId, neighborId } = params;
   const [party, setParty] = useState<Party | null>(null);
   const [selectedMenuItem, setSelectedMenuItem] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
