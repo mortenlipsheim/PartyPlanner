@@ -1,3 +1,5 @@
+'use server';
+
 import fs from 'fs/promises';
 import path from 'path';
 import { Party } from './types';
@@ -8,6 +10,10 @@ const partiesFilePath = path.join(process.cwd(), 'data', 'parties.json');
 const readPartiesFile = async (): Promise<Party[]> => {
     try {
         const fileContents = await fs.readFile(partiesFilePath, 'utf-8');
+        // Handle empty file
+        if (fileContents.trim() === '') {
+            return [];
+        }
         const parties = JSON.parse(fileContents);
         // Dates are stored as ISO strings in JSON, so we need to convert them back to Date objects
         return parties.map((p: Party) => ({
@@ -33,7 +39,8 @@ export const getParties = async (): Promise<Party[]> => {
 export const getParty = async (id: string): Promise<Party | null> => {
     const parties = await readPartiesFile();
     const party = parties.find(p => p.id === id);
-    return party || null;
+    if (!party) return null;
+    return { ...party, date: new Date(party.date) };
 };
 
 export const createParty = async (partyData: Omit<Party, 'id'>) => {
@@ -50,7 +57,13 @@ export const updateParty = async (id: string, partyData: Partial<Omit<Party, 'id
     if (index === -1) {
         throw new Error('Party not found');
     }
-    parties[index] = { ...parties[index], ...partyData };
+    // Make sure date is not stringified if it's already a Date object
+    const updatedParty = { ...parties[index], ...partyData };
+    if (typeof updatedParty.date === 'string') {
+        updatedParty.date = new Date(updatedParty.date);
+    }
+    
+    parties[index] = updatedParty;
     await writePartiesFile(parties);
     return parties[index];
 };
