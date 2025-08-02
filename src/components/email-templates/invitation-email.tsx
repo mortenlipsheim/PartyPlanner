@@ -1,3 +1,5 @@
+/** @jsxImportSource @react-email/components */
+
 import { Party } from '@/lib/types';
 import {
   Body,
