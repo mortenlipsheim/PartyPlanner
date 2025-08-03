@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { useParams } from 'next/navigation';
 import { Party } from '@/lib/types';
 import { getParty, assignMenuItem, updateAttendeeStatus } from '@/lib/party-service';
 import { Button } from '@/components/ui/button';
@@ -11,15 +12,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ChefHat, PartyPopper } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface RsvpPageProps {
-  params: {
-    partyId: string;
-    neighborId: string;
-  };
-}
+export default function RsvpPage() {
+  const params = useParams();
+  const partyId = params.partyId as string;
+  const neighborId = params.neighborId as string;
 
-export default function RsvpPage({ params }: RsvpPageProps) {
-  const { partyId, neighborId } = params;
   const [party, setParty] = useState<Party | null>(null);
   const [selectedMenuItem, setSelectedMenuItem] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
@@ -28,6 +25,7 @@ export default function RsvpPage({ params }: RsvpPageProps) {
   const { toast } = useToast();
   
   const fetchPartyAndConfirmAttendance = useCallback(async () => {
+    if (!partyId || !neighborId) return;
     setLoading(true);
     try {
       // First, confirm attendance
