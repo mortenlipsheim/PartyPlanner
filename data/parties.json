@@ -63,7 +63,7 @@
     "attendees": [
       {
         "neighborId": "68c05dc7-c998-4f2f-bac4-7fca6961d272",
-        "status": "invited"
+        "status": "attending"
       },
       {
         "neighborId": "f874b46a-b256-44b1-9bf8-d802eb90cbf1",

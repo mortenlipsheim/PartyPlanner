@@ -18,8 +18,7 @@ interface RsvpPageProps {
   };
 }
 
-export default function RsvpPage({ params }: RsvpPageProps) {
-  const { partyId, neighborId } = params;
+export default function RsvpPage({ params: { partyId, neighborId } }: RsvpPageProps) {
   const [party, setParty] = useState<Party | null>(null);
   const [selectedMenuItem, setSelectedMenuItem] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
@@ -61,9 +60,9 @@ export default function RsvpPage({ params }: RsvpPageProps) {
         await assignMenuItem(partyId, selectedMenuItem, neighborId);
       }
       setSubmitted(true);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to assign menu item', error);
-        toast({ title: 'Erreur', description: "Une erreur s'est produite lors de l'enregistrement de votre choix.", variant: 'destructive'});
+        toast({ title: 'Erreur', description: error.message || "Une erreur s'est produite lors de l'enregistrement de votre choix.", variant: 'destructive'});
     } finally {
         setSubmitting(false);
     }
@@ -133,7 +132,7 @@ export default function RsvpPage({ params }: RsvpPageProps) {
         ) : (
             <div className="text-center p-6 bg-background rounded-lg">
                 <p className="text-lg">Tous les plats du menu ont déjà été choisis !</p>
-                <p className="text-muted-foreground mt-2">Merci pour votre enthousiasme. Votre participation est confirmée.</p>
+                <p className="text-muted-foreground mt-2">Votre participation est confirmée.</p>
                  <Button onClick={() => setSubmitted(true)} className="mt-4">Terminer</Button>
             </div>
         )}
