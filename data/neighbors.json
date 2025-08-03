@@ -12,5 +12,12 @@
     "name": "Testfammily\nJon",
     "email": "admin@diy-viking.com",
     "phone": ""
+  },
+  {
+    "id": "cc49f070-91cd-4a42-b1ff-8eee9055cfed",
+    "address": "36 rue something",
+    "name": "Les fous\nJohn",
+    "email": "something@gausland.com",
+    "phone": ""
   }
 ]

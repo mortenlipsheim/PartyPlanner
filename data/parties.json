@@ -96,6 +96,10 @@
       {
         "neighborId": "68c05dc7-c998-4f2f-bac4-7fca6961d272",
         "status": "attending"
+      },
+      {
+        "neighborId": "cc49f070-91cd-4a42-b1ff-8eee9055cfed",
+        "status": "invited"
       }
     ]
   }
