@@ -18,7 +18,7 @@ export default function AppHeader() {
       <div className="container mx-auto flex items-center justify-between h-20 px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 text-2xl font-headline font-bold">
           <PartyPopper className="w-8 h-8 text-primary" />
-          <span>Party Planner Pro</span>
+          <span>Hohwald Party</span>
         </Link>
         <nav className="flex items-center gap-2 sm:gap-4">
           {navLinks.map((link) => (

@@ -144,7 +144,7 @@ const InvitationEmail = ({ party, neighborId }: InvitationEmailProps) => {
           </div>
 
           <p style={footerStyle}>
-            Party Planner Pro
+            Hohwald Party
           </p>
         </div>
       </body>

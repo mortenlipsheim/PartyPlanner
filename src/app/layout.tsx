@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import AppHeader from '@/components/app-header';
 
 export const metadata: Metadata = {
-  title: 'Party Planner Pro',
+  title: 'Hohwald Party',
   description: 'Organisez facilement des fêtes de quartier !',
 };
 

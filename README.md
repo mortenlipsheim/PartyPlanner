@@ -1,4 +1,4 @@
-git # Party Planner Pro
+# Hohwald Party
 
 This is a Next.js application for planning parties with your neighbors, built with Firebase Studio.
 
