@@ -1,4 +1,4 @@
-# Party Planner Pro
+git # Party Planner Pro
 
 This is a Next.js application for planning parties with your neighbors, built with Firebase Studio.
 
