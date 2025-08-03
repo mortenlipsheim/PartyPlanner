@@ -1,35 +1,38 @@
-# Dépendances
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
 /node_modules
 /.pnp
 .pnp.js
 
-# Fichiers de build Next.js
+# Testing
+/coverage
+
+# Next.js build output
 /.next/
 /out/
 
-# Fichiers de production
+# Production
 /build
 
-# Fichiers divers (spécifiques aux OS)
-.DS_Store
-*.pem
+# Local environment variables
+.env*.local
 
-# Logs de débogage
+# Log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
-# Fichiers d'environnement locaux
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Editor directories and files
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# Fichiers de configuration Vercel et Netlify
-.vercel
-.netlify
-
-# Fichiers de cache et de compilation TypeScript
-*.tsbuildinfo
-next-env.d.ts
+# macOS
+.DS_Store
