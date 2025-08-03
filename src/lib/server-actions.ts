@@ -28,7 +28,7 @@ export async function sendInvitationEmail({ party, neighbors }: SendInvitationEm
     try {
         const emailPromises = emailsAndNeighbors.map(({ email, neighborId }) => {
             return resend.emails.send({
-                from: 'Party Planner <onboarding@resend.dev>',
+                from: 'Hohwald Party <onboarding@resend.dev>',
                 to: [email],
                 subject: `Invitation : ${party.name}`,
                 react: InvitationEmail({ 
